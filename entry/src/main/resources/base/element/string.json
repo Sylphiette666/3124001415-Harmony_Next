@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "HarmonyOS NEXT 课程学习项目"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "课程学习与任务展示"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "课程学习项目"
+    }
+  ]
+}
