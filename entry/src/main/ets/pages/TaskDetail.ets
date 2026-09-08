@@ -25,6 +25,16 @@ struct TaskDetail {
               Text(this.task.title).id('TaskDetailTitle').fontSize(29).fontWeight(FontWeight.Bold).fontColor(Color.White)
               Text(this.task.summary).fontSize(15).fontColor('#D2E4EC').lineHeight(25)
             }.width('100%').padding(24).alignItems(HorizontalAlign.Start).backgroundColor('#183A4B').borderRadius(22)
+            if (this.task.pageUrl) {
+              Button('进入任务应用  →', { type: ButtonType.Normal }).id('OpenTaskAppButton')
+                .width('100%').height(50).fontSize(16).fontColor(Color.White)
+                .backgroundColor(ACCENT).borderRadius(14)
+                .onClick(() => {
+                  this.getUIContext().getRouter().pushUrl({ url: this.task!.pageUrl }).catch(() => {
+                    this.getUIContext().getPromptAction().showToast({ message: '应用打开失败，请重试' });
+                  });
+                })
+            }
             Column({ space: 20 }) {
               Text('任务要求').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK).width('100%')
               ForEach(this.task.requirements, (requirement: string, index: number) => {

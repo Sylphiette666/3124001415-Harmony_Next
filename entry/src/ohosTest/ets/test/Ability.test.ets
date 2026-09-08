@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@ohos/hypium';
-import { abilityDelegatorRegistry } from '@kit.TestKit';
+import { getTestContext } from './TestContext';
 import { preferences } from '@kit.ArkData';
 import { StudentProfile } from '../../../main/ets/model/CourseData';
 import { ProfileStore } from '../../../main/ets/model/ProfileStore';
@@ -7,8 +7,7 @@ import { ProfileStore } from '../../../main/ets/model/ProfileStore';
 export default function abilityTest() {
   describe('CourseProfilePersistence', () => {
     it('savesChineseProfileAndReloadsFromDisk', 0, async () => {
-      const ability = await abilityDelegatorRegistry.getAbilityDelegator().getCurrentTopAbility();
-      const context = ability.context;
+      const context = await getTestContext();
       const original = ProfileStore.load(context);
       try {
         const edited = new StudentProfile();

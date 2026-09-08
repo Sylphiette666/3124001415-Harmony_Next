@@ -49,6 +49,18 @@ struct Index {
             }.margin({ top: 6 })
           }.alignItems(HorizontalAlign.Start).width('100%').padding(26)
             .backgroundColor('#183A4B').borderRadius(24)
+          Button({ type: ButtonType.Normal }) {
+            Row({ space: 14 }) {
+              Text('名').fontSize(23).fontWeight(FontWeight.Bold).fontColor(ACCENT)
+                .width(46).height(46).textAlign(TextAlign.Center).backgroundColor(Color.White).borderRadius(15)
+              Column({ space: 6 }) {
+                Text('电子名片').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)
+                Text('管理联系人 · 本机保存').fontSize(13).fontColor(MUTED)
+              }.alignItems(HorizontalAlign.Start).layoutWeight(1)
+              Text('›').fontSize(28).fontColor(ACCENT)
+            }.width('100%').padding(20)
+          }.id('OpenCardsButton').width('100%').backgroundColor('#E2F2F1').borderRadius(22)
+            .onClick(() => this.openPage('pages/BusinessCards'))
           Column({ space: 14 }) {
             Row() {
               Text('个人信息').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)
@@ -84,7 +96,7 @@ struct Index {
             }.width('100%')
             Button({ type: ButtonType.Normal }) {
               Row({ space: 14 }) {
-                Text('01').fontSize(23).fontWeight(FontWeight.Bold).fontColor(ACCENT)
+                Text(COURSE_TASKS.length.toString().padStart(2, '0')).fontSize(23).fontWeight(FontWeight.Bold).fontColor(ACCENT)
                 Column({ space: 6 }) {
                   Text('打开任务列表').fontSize(17).fontWeight(FontWeight.Bold).fontColor(INK)
                   Text('查看课程作业与任务详情').fontSize(13).fontColor(MUTED)

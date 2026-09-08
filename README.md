@@ -8,17 +8,32 @@
 - 个人信息可在首页点击“编辑”修改，使用 Preferences 保存在当前设备。
 - 任务列表为每项课程任务提供独立按钮，点击进入对应详情页。
 - 详情页展示任务说明、要求和操作指引，支持页面返回按钮与系统返回。
-- 当前录入 2026 年 9 月 3 日布置的课程学习项目任务。
+- 任务 01：2026 年 9 月 3 日布置的课程学习项目，提供首页、个人资料、任务列表和任务详情。
+- 任务 02：2026 年 9 月 7 日布置的电子名片管理，要求在 2026 年 9 月 11 日前提交到自己的代码仓库。
 
 首次启动已预填学号。姓名、班级或专业需按实际情况填写，不使用示例人物代替。
+
+## 电子名片
+
+首页点击“电子名片”进入名片夹，也可通过“打开任务列表 → 任务 02 → 进入任务应用”进入。
+
+- 新增、查看、编辑和删除名片，保存姓名、电话、邮箱、单位 / 学校、职位 / 身份、地址和备注。
+- 姓名必填，电话和邮箱至少填写一项；保存时检查电话、邮箱格式和内容长度。
+- 支持“同学、老师、工作、其他”分组，以及收藏和仅看收藏。
+- 按姓名、单位、职位、电话或邮箱搜索，可与分组、收藏筛选组合使用。
+- 详情页的联系方式支持长按复制；删除前需确认，取消后保留名片。
+- 编辑后返回时提示是否放弃未保存修改。
+- 名片通过 Preferences 保存在当前设备，重新打开应用后读取本地数据。名片不会上传到 GitHub，卸载应用或清除应用数据会移除本机保存的内容。
+
+操作示例：首页 → 电子名片 → 新增 → 填写姓名与电话或邮箱 → 保存名片 → 点击名片查看详情 → 编辑、收藏或删除。
 
 ## 在 DevEco Studio 中运行
 
 1. 打开本仓库根目录（包含 `build-profile.json5` 的目录）。
 2. 等待项目同步和 OHPM 依赖安装完成。
 3. 使用 HarmonyOS 6.1.1 / API 24 SDK，选择 `entry` 模块和 `default` 产品。
-4. 启动 API 24 手机模拟器，点击 Run。当前工程已在 Pura 90 模拟器验证。
-5. 首页 → 编辑 → 填写个人信息 → 保存；首页 → 打开任务列表 → 查看任务详情。
+4. 启动 API 24 手机模拟器（例如 Pura 90），点击 Run。
+5. 首页 → 编辑 → 填写个人信息 → 保存；首页 → 打开任务列表 → 查看任务详情；首页 → 电子名片 → 管理联系人。
 
 原有包名和签名配置保持不变。当前生成的 HAP 未签名，适用于本次模拟器验证；真机运行需使用自己的开发签名配置。
 
@@ -38,7 +53,29 @@ Windows PowerShell：
 .\scripts\build.ps1 -DevEcoHome 'D:\HUAWEI\DevEco Studio' -Target ohosTest
 ```
 
-在 DevEco Studio 的设备测试中运行 `entry/src/ohosTest/ets/test/Ability.test.ets`。该测试检查中文资料保存、清除内存缓存后的磁盘重读，并恢复原有资料。
+## 设备测试
+
+在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的三套 Hypium 测试。测试前先启动应用，并确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将超时设为 180000 毫秒。
+
+| 测试文件 | 检查内容 |
+| --- | --- |
+| `Ability.test.ets` | 中文个人资料保存、移除内存缓存后的磁盘重读，结束后恢复原资料 |
+| `CardStore.test.ets` | 名片增删改查、磁盘重读、搜索 / 分组 / 收藏、并发写入、字段校验和异常数据处理；使用独立测试存储 |
+| `CardFlow.test.ets` | 从首页新增名片、表单提示、查看与编辑、分组与收藏筛选、关键词搜索、取消删除和确认删除；仅清理本次建立的 QA 名片 |
+
+也可在构建两个 HAP 后，从仓库根目录运行以下 PowerShell 命令。`127.0.0.1:5555` 为本次模拟器地址；其他设备请替换为 `hdc list targets` 返回的目标标识。
+
+```powershell
+$taskHdc = 'D:\HUAWEI\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe'
+$taskDevice = '127.0.0.1:5555'
+& $taskHdc list targets
+& $taskHdc -t $taskDevice install 'entry/build/default/outputs/default/entry-default-unsigned.hap'
+& $taskHdc -t $taskDevice install 'entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap'
+& $taskHdc -t $taskDevice shell aa start -b cn.gdut.iotsoft.cdz3124001415 -a EntryAbility
+& $taskHdc -t $taskDevice shell aa test -b cn.gdut.iotsoft.cdz3124001415 -m entry_test -s unittest OpenHarmonyTestRunner -s timeout 180000 -w 180
+```
+
+构建和设备测试的实际结果见 [验证记录](docs/verification.md)。上述表格说明测试覆盖内容，不代表所有环境都已通过验证。
 
 ## 新增课程任务
 
@@ -51,10 +88,20 @@ Windows PowerShell：
 | `entry/src/main/ets/pages/TaskDetail.ets` | 任务详情 |
 | `entry/src/main/ets/pages/Profile.ets` | 个人信息编辑 |
 | `entry/src/main/ets/model/ProfileStore.ets` | 本机资料存储 |
+| `entry/src/main/ets/pages/BusinessCards.ets` | 名片列表、搜索、分组和收藏筛选 |
+| `entry/src/main/ets/pages/CardEditor.ets` | 新增与编辑名片、表单校验、未保存修改提示 |
+| `entry/src/main/ets/pages/CardDetail.ets` | 名片详情、收藏切换和删除确认 |
+| `entry/src/main/ets/model/BusinessCard.ets` | 名片模型、字段校验、搜索和排序 |
+| `entry/src/main/ets/model/CardStore.ets` | 本地名片持久化、写入排队和异常处理 |
+| `entry/src/main/ets/model/CourseData.ets` | 任务 01 / 02 说明与功能页入口 |
 | `entry/src/main/resources/base/profile/main_pages.json` | 页面注册 |
+| `entry/src/ohosTest/ets/test/List.test.ets` | 三套设备测试的统一入口 |
+| `scripts/build.ps1` | 应用及设备测试包构建脚本 |
 
 ## GitHub
 
-目标仓库名：`3124001415-Harmony_Next`。提交源码、资源和项目配置；构建缓存、设备测试临时文件及证书密钥不进入版本控制。个人资料在运行设备中保存，不会随源码提交。
+目标仓库：[Sylphiette666/3124001415-Harmony_Next](https://github.com/Sylphiette666/3124001415-Harmony_Next)。任务 02 的提交期限为 2026 年 9 月 11 日前。
+
+提交源码、资源、运行说明和项目配置；构建缓存、设备测试临时文件及证书密钥不进入版本控制。个人资料和联系人数据在运行设备中保存，不会随源码提交。
 
 验证记录和界面截图见 [docs/verification.md](docs/verification.md)。

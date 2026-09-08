@@ -3,6 +3,9 @@
     "pages/Index",
     "pages/Tasks",
     "pages/TaskDetail",
-    "pages/Profile"
+    "pages/Profile",
+    "pages/BusinessCards",
+    "pages/CardDetail",
+    "pages/CardEditor"
   ]
 }
