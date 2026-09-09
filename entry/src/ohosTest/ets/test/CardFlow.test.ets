@@ -103,6 +103,8 @@ export default function cardFlowTest() {
       let createdId = '';
       try {
         // 从首页走真实导航，空表单应停留在编辑页并显示可理解的提示。
+        // 冷启动先经过约一秒的校徽启动页。
+        await ui.wait('OpenCardsButton');
         await ui.scrollTo('OpenCardsButton');
         await ui.click('OpenCardsButton');
         await ui.click('NewCardButton');

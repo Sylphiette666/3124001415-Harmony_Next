@@ -4,6 +4,7 @@
 
 ## 功能
 
+- 冷启动先显示白底校徽与校名图片，约 1 秒后进入首页；桌面图标使用校徽。
 - 首页展示项目标题、姓名、学号和班级或专业。
 - 个人信息可在首页点击“编辑”修改，使用 Preferences 保存在当前设备。
 - 任务列表为每项课程任务提供独立按钮，点击进入对应详情页。
@@ -83,6 +84,7 @@ $taskDevice = '127.0.0.1:5555'
 
 | 文件 | 用途 |
 | --- | --- |
+| `entry/src/main/ets/pages/Splash.ets` | 白底图片启动页、1 秒展示与首页跳转 |
 | `entry/src/main/ets/pages/Index.ets` | 课程首页 |
 | `entry/src/main/ets/pages/Tasks.ets` | 任务列表 |
 | `entry/src/main/ets/pages/TaskDetail.ets` | 任务详情 |
@@ -105,3 +107,5 @@ $taskDevice = '127.0.0.1:5555'
 提交源码、资源、运行说明和项目配置；构建缓存、设备测试临时文件及证书密钥不进入版本控制。个人资料和联系人数据在运行设备中保存，不会随源码提交。
 
 验证记录和界面截图见 [docs/verification.md](docs/verification.md)。
+
+启动页、图标来源和验证截图见 [启动外观说明](docs/branding.md)。
