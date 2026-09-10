@@ -1,0 +1,11 @@
+2026-09-10 个人资料 UI 定向回归实际结果（状态码 1=开始，0=通过）
+OHOS_REPORT_STATUS: class=ProfileHomepageRefresh
+OHOS_REPORT_STATUS: class=ProfileHomepageRefresh
+OHOS_REPORT_STATUS: test=updatesClassOnHomeAfterTwoSavesAndRestoresOriginalProfile
+OHOS_REPORT_STATUS_CODE: 1
+OHOS_REPORT_STATUS: class=ProfileHomepageRefresh
+OHOS_REPORT_STATUS: test=updatesClassOnHomeAfterTwoSavesAndRestoresOriginalProfile
+OHOS_REPORT_STATUS_CODE: 0
+OHOS_REPORT_STATUS: class=ProfileHomepageRefresh
+OHOS_REPORT_RESULT: stream=Tests run: 1, Failure: 0, Error: 0, Pass: 1, Ignore: 0
+TestFinished-ResultCode: 0

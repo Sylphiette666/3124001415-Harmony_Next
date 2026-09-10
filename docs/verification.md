@@ -2,6 +2,8 @@
 
 验证日期：2026-09-08 至 2026-09-09。工程使用 DevEco Studio 6.1 工具链、HarmonyOS 6.1.1（API 24）SDK，在 Pura 90 手机模拟器上运行。
 
+2026-09-10 的班级显示修复与新增个人资料界面回归见 [个人信息刷新修复记录](profile-refresh.md)。下文保留原有 7 项业务测试记录。
+
 ## 构建与安装
 
 - 主应用和 `ohosTest` 测试包均为 `BUILD SUCCESSFUL`。

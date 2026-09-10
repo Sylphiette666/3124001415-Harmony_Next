@@ -20,13 +20,6 @@ struct Index {
       this.getUIContext().getPromptAction().showToast({ message: '页面打开失败，请重试' });
     });
   }
-  @Builder
-  infoRow(label: string, value: string) {
-    Row() {
-      Text(label).fontSize(14).fontColor(MUTED).width(58)
-      Text(value).fontSize(15).fontColor(INK).layoutWeight(1)
-    }.width('100%').padding({ top: 8, bottom: 8 })
-  }
   build() {
     Column() {
       Scroll() {
@@ -84,8 +77,16 @@ struct Index {
               if (this.loadError) {
                 Text(this.loadError).fontSize(13).fontColor('#AF3434').width('100%')
               }
-              this.infoRow('学号', this.profile.studentId)
-              this.infoRow('班级', this.profile.className || '请填写班级或专业')
+              // 直接读取状态；按值传入 @Builder 的文字不会随资料更新刷新。
+              Row() {
+                Text('学号').fontSize(14).fontColor(MUTED).width(58)
+                Text(this.profile.studentId).id('StudentId').fontSize(15).fontColor(INK).layoutWeight(1)
+              }.width('100%').padding({ top: 8, bottom: 8 })
+              Row() {
+                Text('班级').fontSize(14).fontColor(MUTED).width(58)
+                Text(this.profile.className || '请填写班级或专业').id('StudentClass')
+                  .fontSize(15).fontColor(INK).layoutWeight(1)
+              }.width('100%').padding({ top: 8, bottom: 8 })
             }.width('100%').padding(22).backgroundColor(Color.White).borderRadius(22)
           }.width('100%')
           Column({ space: 14 }) {
@@ -108,7 +109,7 @@ struct Index {
           }.width('100%')
           Text('HARMONY NEXT  /  学习 · 实践 · 积累').fontSize(11).fontColor(MUTED).letterSpacing(1)
         }.width('100%').constraintSize({ maxWidth: 680 }).padding({ left: 22, right: 22, top: 24, bottom: 30 })
-      }.layoutWeight(1).width('100%').scrollBar(BarState.Off).align(Alignment.Top)
+      }.id('HomeScroll').layoutWeight(1).width('100%').scrollBar(BarState.Off).align(Alignment.Top)
     }.width('100%').height('100%').backgroundColor(PAGE_BG)
   }
 }

@@ -77,7 +77,7 @@ struct Profile {
             .width('100%').height(52).fontSize(16).fontColor(Color.White).backgroundColor(ACCENT).borderRadius(14)
             .enabled(!this.saving).onClick(() => { this.save(); })
         }.width('100%').constraintSize({ maxWidth: 680 }).padding({ left: 22, right: 22, top: 22, bottom: 30 })
-      }.width('100%').layoutWeight(1).scrollBar(BarState.Off).align(Alignment.Top)
+      }.id('ProfileScroll').width('100%').layoutWeight(1).scrollBar(BarState.Off).align(Alignment.Top)
     }.width('100%').height('100%').backgroundColor(PAGE_BG)
   }
 }

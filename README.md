@@ -56,11 +56,12 @@ Windows PowerShell：
 
 ## 设备测试
 
-在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的三套 Hypium 测试。测试前先启动应用，并确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将超时设为 180000 毫秒。
+在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的四套 Hypium 测试。测试前先启动应用、填写并保存完整个人资料，确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将单用例超时设为 180000 毫秒，整轮等待时间设为 300 秒。
 
 | 测试文件 | 检查内容 |
 | --- | --- |
 | `Ability.test.ets` | 中文个人资料保存、移除内存缓存后的磁盘重读，结束后恢复原资料 |
+| `ProfileFlow.test.ets` | 连续两次编辑保存后首页班级与学号即时刷新、重新进入表单读回，结束后经界面恢复原资料 |
 | `CardStore.test.ets` | 名片增删改查、磁盘重读、搜索 / 分组 / 收藏、并发写入、字段校验和异常数据处理；使用独立测试存储 |
 | `CardFlow.test.ets` | 从首页新增名片、表单提示、查看与编辑、分组与收藏筛选、关键词搜索、取消删除和确认删除；仅清理本次建立的 QA 名片 |
 
@@ -73,7 +74,7 @@ $taskDevice = '127.0.0.1:5555'
 & $taskHdc -t $taskDevice install 'entry/build/default/outputs/default/entry-default-unsigned.hap'
 & $taskHdc -t $taskDevice install 'entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap'
 & $taskHdc -t $taskDevice shell aa start -b cn.gdut.iotsoft.cdz3124001415 -a EntryAbility
-& $taskHdc -t $taskDevice shell aa test -b cn.gdut.iotsoft.cdz3124001415 -m entry_test -s unittest OpenHarmonyTestRunner -s timeout 180000 -w 180
+& $taskHdc -t $taskDevice shell aa test -b cn.gdut.iotsoft.cdz3124001415 -m entry_test -s unittest OpenHarmonyTestRunner -s timeout 180000 -w 300
 ```
 
 构建和设备测试的实际结果见 [验证记录](docs/verification.md)。上述表格说明测试覆盖内容，不代表所有环境都已通过验证。
@@ -97,7 +98,7 @@ $taskDevice = '127.0.0.1:5555'
 | `entry/src/main/ets/model/CardStore.ets` | 本地名片持久化、写入排队和异常处理 |
 | `entry/src/main/ets/model/CourseData.ets` | 任务 01 / 02 说明与功能页入口 |
 | `entry/src/main/resources/base/profile/main_pages.json` | 页面注册 |
-| `entry/src/ohosTest/ets/test/List.test.ets` | 三套设备测试的统一入口 |
+| `entry/src/ohosTest/ets/test/List.test.ets` | 四套设备测试的统一入口 |
 | `scripts/build.ps1` | 应用及设备测试包构建脚本 |
 
 ## GitHub
@@ -109,3 +110,5 @@ $taskDevice = '127.0.0.1:5555'
 验证记录和界面截图见 [docs/verification.md](docs/verification.md)。
 
 启动页、图标来源和验证截图见 [启动外观说明](docs/branding.md)。
+
+班级保存后首页显示问题的修复与回归记录见 [个人信息刷新修复](docs/profile-refresh.md)。
