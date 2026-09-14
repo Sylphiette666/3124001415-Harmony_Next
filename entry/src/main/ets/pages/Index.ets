@@ -54,6 +54,18 @@ struct Index {
             }.width('100%').padding(20)
           }.id('OpenCardsButton').width('100%').backgroundColor('#E2F2F1').borderRadius(22)
             .onClick(() => this.openPage('pages/BusinessCards'))
+          Button({ type: ButtonType.Normal }) {
+            Row({ space: 14 }) {
+              Text('⌁').fontSize(25).fontWeight(FontWeight.Bold).fontColor(ACCENT)
+                .width(46).height(46).textAlign(TextAlign.Center).backgroundColor(Color.White).borderRadius(15)
+              Column({ space: 6 }) {
+                Text('有声计算器').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)
+                Text('标准计算 · 按键与结果播报').fontSize(13).fontColor(MUTED)
+              }.alignItems(HorizontalAlign.Start).layoutWeight(1)
+              Text('›').fontSize(28).fontColor(ACCENT)
+            }.width('100%').padding(20)
+          }.id('OpenCalculatorButton').width('100%').backgroundColor('#FFF4E5').borderRadius(22)
+            .onClick(() => this.openPage('pages/Calculator'))
           Column({ space: 14 }) {
             Row() {
               Text('个人信息').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)

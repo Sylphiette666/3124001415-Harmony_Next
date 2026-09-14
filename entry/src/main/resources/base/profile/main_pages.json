@@ -7,6 +7,7 @@
     "pages/Profile",
     "pages/BusinessCards",
     "pages/CardDetail",
-    "pages/CardEditor"
+    "pages/CardEditor",
+    "pages/Calculator"
   ]
 }
