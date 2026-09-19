@@ -66,6 +66,18 @@ struct Index {
             }.width('100%').padding(20)
           }.id('OpenCalculatorButton').width('100%').backgroundColor('#FFF4E5').borderRadius(22)
             .onClick(() => this.openPage('pages/Calculator'))
+          Button({ type: ButtonType.Normal }) {
+            Row({ space: 14 }) {
+              Image($rawfile('weather/weather_sun.svg')).width(46).height(46)
+                .padding(7).backgroundColor(Color.White).borderRadius(15)
+              Column({ space: 6 }) {
+                Text('天气预报').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)
+                Text('省市查询 · 当前天气与七日预报').fontSize(13).fontColor(MUTED)
+              }.alignItems(HorizontalAlign.Start).layoutWeight(1)
+              Text('›').fontSize(28).fontColor(ACCENT)
+            }.width('100%').padding(20)
+          }.id('OpenWeatherButton').width('100%').backgroundColor('#E5EFFA').borderRadius(22)
+            .onClick(() => this.openPage('pages/Weather'))
           Column({ space: 14 }) {
             Row() {
               Text('个人信息').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)

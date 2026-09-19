@@ -8,6 +8,7 @@
     "pages/BusinessCards",
     "pages/CardDetail",
     "pages/CardEditor",
-    "pages/Calculator"
+    "pages/Calculator",
+    "pages/Weather"
   ]
 }

@@ -12,6 +12,7 @@
 - 任务 01：2026 年 9 月 3 日布置的课程学习项目，提供首页、个人资料、任务列表和任务详情。
 - 任务 02：2026 年 9 月 7 日布置的电子名片管理，要求在 2026 年 9 月 11 日前提交到自己的代码仓库。
 - 任务 03：2026 年 9 月 13 日布置的有声计算器，支持标准计算、按键读音和结果播报；说明文档位于根目录 `doc`。
+- 任务 04：2026 年 9 月 18 日布置的天气预报，支持 34 个省级地区、392 个城市及行政区域选择、当前天气与七日预报、加载 / 错误 / 断网提示、重试及明确标记的离线缓存。
 
 首次启动已预填学号。姓名、班级或专业需按实际情况填写，不使用示例人物代替。
 
@@ -29,6 +30,12 @@
 
 操作示例：首页 → 电子名片 → 新增 → 填写姓名与电话或邮箱 → 保存名片 → 点击名片查看详情 → 编辑、收藏或删除。
 
+## 天气预报
+
+首页点击“天气预报”或进入任务 04，选择省份和城市后点击“查询天气”。默认广州，后续记住上次城市。显示温度、天气状况、体感、湿度、风向 / 风力以及含今日的七日预报。提供加载、失败、断网提示和重试；最近 12 个城市缓存最多显示 24 小时，旧数据始终明确标记。
+
+使用无需 API Key 的 Open-Meteo HTTPS 接口，当前天气为气象模型估算值。省市目录内置，不申请定位权限。数据、网络、缓存、状态管理与 UI 分层；说明、测试命令、来源及设备截图见 [doc/weather.md](doc/weather.md)。
+
 ## 在 DevEco Studio 中运行
 
 1. 打开本仓库根目录（包含 `build-profile.json5` 的目录）。
@@ -37,6 +44,7 @@
 4. 启动 API 24 手机模拟器（例如 Pura 90），点击 Run。
 5. 首页 → 编辑 → 填写个人信息 → 保存；首页 → 打开任务列表 → 查看任务详情；首页 → 电子名片 → 管理联系人。
 6. 首页 → 有声计算器，或任务列表 → 任务 03 → 进入任务应用。语音默认开启，可用顶部按钮关闭或重新开启。
+7. 首页 → 天气预报，选择省份和城市 → 查询天气；向下滚动查看七日预报和刷新按钮。首次联网需保证模拟器或设备能访问 Open-Meteo。
 
 原有包名和签名配置保持不变。当前生成的 HAP 未签名，适用于本次模拟器验证；真机运行需使用自己的开发签名配置。
 
@@ -58,7 +66,7 @@ Windows PowerShell：
 
 ## 设备测试
 
-在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的六套 Hypium 测试。测试前先启动应用、填写并保存完整个人资料，确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将单用例超时设为 180000 毫秒，整轮等待时间设为 600 秒。
+在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的七套 Hypium 测试。测试前先启动应用、填写并保存完整个人资料，确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将单用例超时设为 180000 毫秒，整轮等待时间设为 600 秒。
 
 | 测试文件 | 检查内容 |
 | --- | --- |
@@ -68,6 +76,7 @@ Windows PowerShell：
 | `CardFlow.test.ets` | 从首页新增名片、表单提示、查看与编辑、分组与收藏筛选、关键词搜索、取消删除和确认删除；仅清理本次建立的 QA 名片 |
 | `CalculatorEngine.test.ets` | 四则、连续等号、百分比、一元运算、输入编辑、数值范围及错误恢复 |
 | `CalculatorFlow.test.ets` | 首页入口、按键计算、错误提示与恢复、语音开关、重播与返回 |
+| `WeatherFlow.test.ets` | 首页入口、真实天气请求、天气字段、七日预报、刷新与返回 |
 
 也可在构建两个 HAP 后，从仓库根目录运行以下 PowerShell 命令。`127.0.0.1:5555` 为本次模拟器地址；其他设备请替换为 `hdc list targets` 返回的目标标识。
 
@@ -81,13 +90,19 @@ $taskDevice = '127.0.0.1:5555'
 & $taskHdc -t $taskDevice shell aa test -b cn.gdut.iotsoft.cdz3124001415 -m entry_test -s unittest OpenHarmonyTestRunner -s timeout 180000 -w 600
 ```
 
-构建和设备测试的实际结果见 [原有功能验证记录](docs/verification.md) 和 [有声计算器验证记录](doc/calculator.md)。上述表格说明测试覆盖内容，不代表所有环境都已通过验证。
+构建和设备测试的实际结果见 [原有功能验证记录](docs/verification.md)、[有声计算器验证记录](doc/calculator.md) 和 [天气验证记录](doc/weather.md)。上述表格说明测试覆盖内容，不代表所有环境都已通过验证。
 
 计算模型的 26 项测试和语音服务的 8 项异步回调测试可独立运行：
 
 ```powershell
 & 'D:\HUAWEI\DevEco Studio\tools\node\node.exe' scripts/test-calculator-engine.cjs --deveco-home 'D:\HUAWEI\DevEco Studio'
 & 'D:\HUAWEI\DevEco Studio\tools\node\node.exe' scripts/test-calculator-speech.cjs --deveco-home 'D:\HUAWEI\DevEco Studio'
+```
+
+天气模块的 32 项本地测试及真实 API 检查：
+
+```powershell
+& 'D:\HUAWEI\DevEco Studio\tools\node\node.exe' scripts/test-weather.cjs --deveco-home 'D:\HUAWEI\DevEco Studio' --live
 ```
 
 ## 新增课程任务
@@ -110,14 +125,22 @@ $taskDevice = '127.0.0.1:5555'
 | `entry/src/main/ets/pages/Calculator.ets` | 有声计算器页面与按键交互 |
 | `entry/src/main/ets/model/CalculatorEngine.ets` | 独立计算状态机和数值格式化 |
 | `entry/src/main/ets/services/CalculatorSpeech.ets` | 系统中文语音、播报队列与资源释放 |
-| `entry/src/main/ets/model/CourseData.ets` | 任务 01 / 02 / 03 说明与功能页入口 |
+| `entry/src/main/ets/pages/Weather.ets` | 天气界面、省市选择、状态提示与七日预报 |
+| `entry/src/main/ets/model/WeatherController.ets` | 请求状态、缓存策略和旧请求防护 |
+| `entry/src/main/ets/model/WeatherData.ets` | 天气数据校验和中文展示转换 |
+| `entry/src/main/ets/model/WeatherCities.ets` | 34 个省级地区、392 个城市及行政区域 |
+| `entry/src/main/ets/model/WeatherStore.ets` | 最近城市和独立天气缓存 |
+| `entry/src/main/ets/services/WeatherHttpClient.ets` | HTTP 请求、断网检测、超时及资源释放 |
+| `entry/src/main/ets/model/CourseData.ets` | 任务 01 / 02 / 03 / 04 说明与功能页入口 |
 | `entry/src/main/resources/base/profile/main_pages.json` | 页面注册 |
-| `entry/src/ohosTest/ets/test/List.test.ets` | 六套设备测试的统一入口 |
+| `entry/src/ohosTest/ets/test/List.test.ets` | 七套设备测试的统一入口 |
 | `scripts/build.ps1` | 应用及设备测试包构建脚本 |
 
-## GitHub
+## GitHub 与 Gitee
 
 目标仓库：[Sylphiette666/3124001415-Harmony_Next](https://github.com/Sylphiette666/3124001415-Harmony_Next)。任务 02 的提交期限为 2026 年 9 月 11 日前。
+
+Gitee 对应仓库：[Sylphiette666/3124001415-Harmony_Next](https://gitee.com/Sylphiette666/3124001415-Harmony_Next)。任务 04 的提交期限为 2026 年 9 月 24 日前。推送需要当前机器拥有目标仓库写入权限。
 
 提交源码、资源、运行说明和项目配置；构建缓存、设备测试临时文件及证书密钥不进入版本控制。个人资料和联系人数据在运行设备中保存，不会随源码提交。
 
@@ -128,3 +151,5 @@ $taskDevice = '127.0.0.1:5555'
 班级保存后首页显示问题的修复与回归记录见 [个人信息刷新修复](docs/profile-refresh.md)。
 
 有声计算器的操作说明、设计和本次验证记录见 [doc/calculator.md](doc/calculator.md)。任务 03 要求在 2026 年 9 月 17 日前提交，文档按要求保存在根目录 `doc`。
+
+天气预报的操作、分层设计、数据来源及设备验证记录见 [doc/weather.md](doc/weather.md)。
