@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>网页留言板</title>
+  <style>
+    :root{color-scheme:light;--ink:#182d3b;--muted:#647888;--accent:#087e8b;--line:#e6ecef;--bg:#f3f6f8}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"HarmonyOS Sans SC","Microsoft YaHei",sans-serif}
+    main{max-width:660px;margin:auto;padding:16px 20px 30px}h1,h2,p{margin:0}button,input,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.5;cursor:default}
+    button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}button{border:0}header{padding:2px 2px 20px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--accent);font-weight:700}h1{font-size:29px;letter-spacing:-.5px;margin:8px 0 4px;line-height:1.3}.sub{color:var(--muted);font-size:13px}
+    .card{background:white;border:1px solid #edf1f4;border-radius:20px;padding:20px}.form-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}h2{font-size:18px}.tag{color:var(--accent);background:#e5f4f3;border-radius:20px;font-size:11px;padding:3px 10px}
+    label{display:block;font-size:13px;font-weight:600;margin:10px 0 6px}input,textarea{display:block;width:100%;color:var(--ink);background:#f7f9fa;border:1px solid var(--line);border-radius:11px;padding:10px 12px;min-width:0}textarea{resize:vertical;min-height:100px;max-height:250px;line-height:1.65}input::placeholder,textarea::placeholder{color:#8797a2}.counter{text-align:right;font-size:11px;color:var(--muted);margin:4px 0 10px}
+    .primary{background:var(--accent);color:white;border-radius:11px;padding:11px 14px;width:100%;font-weight:600}.quiet{background:#e8f3f4;color:var(--accent);border-radius:10px;padding:7px 12px;font-size:12px}.form-foot{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:12px;color:var(--muted);font-size:11px}
+    #feedback{margin-top:10px;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}#feedback[data-tone=error]{color:#ad3636}#feedback[data-tone=success]{color:var(--accent)}[hidden]{display:none!important}
+    #notice{border:1px solid #cae4e4;background:#e7f3f2;color:#1c5d63;border-radius:14px;padding:12px 14px;margin-bottom:16px;font-size:13px}.notice-top{display:flex;justify-content:space-between;align-items:center;font-weight:600;margin-bottom:4px}#dismissNotice{padding:1px 8px;background:transparent;color:#426e74;font-size:20px}
+    .list-head{display:flex;align-items:center;justify-content:space-between;margin:24px 0 12px}.count{font-size:12px;color:var(--muted)}#search{margin-bottom:12px;font-size:13px}#messages{display:grid;gap:12px}.message{padding:17px 18px}.message-head{display:flex;gap:10px;align-items:center}.avatar{background:#e4f1f0;color:var(--accent);width:36px;height:36px;display:grid;place-items:center;border-radius:12px;font-weight:700;flex-shrink:0}.identity{flex:1;min-width:0}.author{display:block;font-size:14px;overflow-wrap:anywhere}.date{font-size:11px;color:var(--muted)}.delete{background:transparent;color:#748794;padding:8px;font-size:12px}.body{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px;font-size:14px;line-height:1.75}#empty{text-align:center;color:var(--muted);padding:30px 15px}.empty-icon{margin:0 auto 12px;width:44px;height:44px;border:1px solid #c8dfe2;color:var(--accent);border-radius:14px;display:grid;place-items:center;font-size:24px}#empty strong{display:block;font-size:15px;color:var(--ink);margin-bottom:5px}#empty p{font-size:12px}
+    footer{font-size:11px;color:var(--muted);text-align:center;margin-top:22px}dialog{border:0;border-radius:20px;max-width:330px;width:calc(100% - 40px);padding:24px;color:var(--ink)}dialog::backdrop{background:#152c3c66}dialog p{font-size:14px;color:var(--muted);margin:10px 0 20px}.actions{display:flex;gap:12px}.actions button{flex:1;border-radius:10px;padding:10px}.danger{background:#af3939;color:white}
+    @media(max-width:340px){main{padding:14px 12px 25px}.card{padding:16px}h1{font-size:26px}.form-foot{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<main>
+  <header><div class="eyebrow">COURSE MESSAGE BOARD</div><h1>把想法留在这里。</h1><p class="sub">记录学习心得，也留下一点新的灵感。</p></header>
+  <section id="notice" role="status" hidden><div class="notice-top"><span>应用通知</span><button id="dismissNotice" aria-label="关闭通知">×</button></div><p id="noticeText"></p></section>
+  <section class="card" aria-labelledby="composeTitle">
+    <div class="form-title"><h2 id="composeTitle">写一条留言</h2><span class="tag">仅保存在本机</span></div>
+    <form id="messageForm" novalidate>
+      <label for="author">你的称呼</label><input id="author" name="author" autocomplete="off" maxlength="24" placeholder="怎么称呼你？" required>
+      <label for="body">留言内容</label><textarea id="body" name="body" maxlength="500" placeholder="今天有什么想记录的？" required></textarea>
+      <div class="counter"><span id="bodyCount">0</span> / 500</div>
+      <button id="submitMessage" class="primary" type="submit" disabled>正在连接…</button>
+    </form>
+    <div id="feedback" role="status" aria-live="polite"></div>
+    <div class="form-foot"><span id="connectionText">正在读取历史留言…</span><button id="toastButton" class="quiet" type="button">显示系统提示</button></div>
+    <button id="retryHistory" class="quiet" type="button" hidden>重新读取留言</button>
+  </section>
+  <section aria-labelledby="listTitle">
+    <div class="list-head"><h2 id="listTitle">留言记录</h2><span id="messageCount" class="count">0 条</span></div>
+    <input id="search" type="search" maxlength="80" aria-label="搜索留言" placeholder="搜索称呼或留言内容">
+    <div id="messages" aria-live="polite"></div>
+    <div id="empty" class="card"><div class="empty-icon" aria-hidden="true">✎</div><strong id="emptyTitle">还没有留言</strong><p id="emptyText">写下第一条，让想法有迹可循。</p></div>
+  </section>
+  <footer>本机最多保存 100 条 · 清除应用数据或卸载后会移除</footer>
+</main>
+<dialog id="deleteDialog" aria-labelledby="deleteTitle"><h2 id="deleteTitle">删除这条留言？</h2><p>删除后无法恢复，其他留言会保留。</p><div class="actions"><button id="cancelDelete" type="button">取消</button><button id="confirmDelete" class="danger" type="button">删除留言</button></div></dialog>
+<script>
+'use strict';
+(() => {
+  const $ = id => document.getElementById(id);
+  let messages = [], sequence = 0, connected = false, hasHistory = false, busy = false;
+  let pending = null, deleteId = '', timer = 0;
+  const field = (tag, className, text) => { const element = document.createElement(tag); element.className = className; element.textContent = text; return element; };
+  function feedback(text, tone = 'error') { $('feedback').textContent = text; $('feedback').dataset.tone = tone; }
+  function controls() {
+    $('submitMessage').disabled = !connected || !hasHistory || busy;
+    $('submitMessage').textContent = busy ? '正在保存…' : connected ? '保存留言' : '正在连接…';
+    $('author').disabled = busy; $('body').disabled = busy;
+  }
+  function call(method, value) {
+    try {
+      if (!window.NativeBoard || typeof window.NativeBoard[method] !== 'function') throw new Error('请在课程应用中打开此留言板');
+      const result = value === undefined ? window.NativeBoard[method]() : window.NativeBoard[method](value);
+      const ack = JSON.parse(result);
+      if (!ack.ok) throw new Error(ack.message || '操作未完成，请重试');
+      return true;
+    } catch (error) { feedback(error.message || '应用通信失败，请重新加载'); return false; }
+  }
+  function newId() {
+    if (window.crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+    return 'msg_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2);
+  }
+  function render() {
+    const query = $('search').value.trim().toLocaleLowerCase();
+    const visible = messages.filter(message => (message.author + '\n' + message.body).toLocaleLowerCase().includes(query));
+    $('messages').replaceChildren();
+    for (const message of visible) {
+      const article = field('article', 'card message', ''); article.dataset.messageId = message.id;
+      const head = field('div', 'message-head', '');
+      head.append(field('span', 'avatar', Array.from(message.author)[0] || '同'));
+      const identity = field('div', 'identity', ''); identity.append(field('strong', 'author', message.author));
+      const time = new Date(message.createdAt);
+      identity.append(field('div', 'date', time.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false})));
+      head.append(identity);
+      const remove = field('button', 'delete', '删除'); remove.type = 'button'; remove.setAttribute('aria-label', '删除 ' + message.author + ' 的留言');
+      remove.addEventListener('click', () => { deleteId = message.id; $('deleteDialog').showModal(); });
+      head.append(remove); article.append(head, field('p', 'body', message.body)); $('messages').append(article);
+    }
+    $('messageCount').textContent = query ? visible.length + ' / ' + messages.length + ' 条' : messages.length + ' 条';
+    $('empty').hidden = visible.length > 0;
+    $('emptyTitle').textContent = !hasHistory ? '正在等待历史留言' : query ? '没有找到相关留言' : '还没有留言';
+    $('emptyText').textContent = !hasHistory ? '连接完成后会自动显示，也可重新读取。' : query ? '试试其他关键词。' : '写下第一条，让想法有迹可循。';
+    document.title = '网页留言板 · ' + messages.length + ' 条';
+  }
+  $('messageForm').addEventListener('submit', event => {
+    event.preventDefault(); if (busy || !hasHistory) return;
+    const author = $('author').value.trim(), body = $('body').value.trim();
+    if (!author || author.length > 24) { feedback('请填写 1 至 24 个字的称呼'); $('author').focus(); return; }
+    if (!body || body.length > 500) { feedback('请填写 1 至 500 个字的留言'); $('body').focus(); return; }
+    if (!pending || pending.author !== author || pending.body !== body) pending = {id:newId(),author,body};
+    busy = true; controls(); feedback('正在保存到本机…', 'success');
+    if (!call('submitMessage', JSON.stringify(pending))) { busy = false; controls(); return; }
+    clearTimeout(timer); timer = setTimeout(() => { busy = false; controls(); feedback('暂未收到保存结果，请重新读取或重试；重复提交不会重复保存'); $('retryHistory').hidden = false; }, 12000);
+  });
+  $('body').addEventListener('input', () => { $('bodyCount').textContent = $('body').value.length; });
+  $('search').addEventListener('input', render);
+  $('toastButton').addEventListener('click', () => { if (call('showToast', '这是一条由网页触发的原生 Toast 提示')) feedback('已调用系统提示', 'success'); });
+  $('retryHistory').addEventListener('click', () => { if (call('requestHistory')) feedback('正在重新读取…', 'success'); });
+  $('dismissNotice').addEventListener('click', () => { $('notice').hidden = true; });
+  $('cancelDelete').addEventListener('click', () => { $('deleteDialog').close(); deleteId = ''; });
+  $('confirmDelete').addEventListener('click', () => { const id = deleteId; $('deleteDialog').close(); deleteId = ''; if (id) call('deleteMessage', id); });
+  window.MessageBoard = Object.freeze({ receive(event) {
+    if (!event || !Number.isInteger(event.sequence) || event.sequence <= sequence) return 1;
+    sequence = event.sequence; connected = true;
+    $('connectionText').textContent = '保存后退出应用也不会丢失';
+    if (event.kind === 'snapshot' || event.kind === 'saved' || event.kind === 'deleted') {
+      messages = event.messages; hasHistory = true; $('retryHistory').hidden = true; render();
+      if (event.kind === 'saved' && pending && pending.id === event.requestId) {
+        if ($('author').value.trim() === pending.author && $('body').value.trim() === pending.body) { $('body').value = ''; $('bodyCount').textContent = '0'; }
+        pending = null; busy = false; clearTimeout(timer);
+      }
+      if (event.message) feedback(event.message, 'success');
+      else if (!busy) feedback('历史留言已同步', 'success');
+    } else if (event.kind === 'error') {
+      if (!event.requestId || (pending && pending.id === event.requestId)) { busy = false; clearTimeout(timer); }
+      if (!event.requestId) hasHistory = false;
+      feedback(event.message || '读取失败，请重试'); $('retryHistory').hidden = false; render();
+    } else if (event.kind === 'notice') {
+      $('noticeText').textContent = event.message; $('notice').hidden = false;
+      $('notice').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+    controls(); return 1;
+  }});
+  render(); controls();
+  setTimeout(() => { if (!connected) { feedback('暂未连接应用，请点击上方刷新或重新读取'); $('retryHistory').hidden = false; } }, 12000);
+})();
+</script>
+</body>
+</html>

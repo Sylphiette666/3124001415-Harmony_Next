@@ -43,7 +43,14 @@ export const COURSE_TASKS: CourseTask[] = [
       '未来预报：展示七日天气、最高最低温、降水概率及最大风力。',
       '友好交互：加载、失败、无网络均有提示，可重试并查看明确标记的历史缓存。',
       '工程实践：网络、数据解析、存储与界面分离；文档保存在根目录 doc。',
-      '提交时间：2026 年 9 月 24 日前更新课程代码仓库。'], 'pages/Weather')
+      '提交时间：2026 年 9 月 24 日前更新课程代码仓库。'], 'pages/Weather'),
+  new CourseTask('05', '网页留言板', '2026.09.27',
+    '本地网页与原生双向通信，由原生侧保存留言，支持历史记录和通知推送。',
+    ['本地网页：Web 组件加载 rawfile 中的 HTML，结构、样式与脚本均由网页实现。',
+      '双向通信：javaScriptProxy 注入提交、读取和 Toast 能力；原生主动调用网页函数渲染历史留言和通知。',
+      '本机保存：原生持久化存储留言，支持搜索、确认删除和重启后读取。',
+      '友好交互：加载进度、失败重试、网页标题同步及刷新。',
+      '工程实践：桥接与存储独立封装，文档放在根目录 doc。'], 'pages/MessageBoard')
 ];
 export interface TaskRouteParams { taskId: string; }
 export const INK: string = '#182D3B';

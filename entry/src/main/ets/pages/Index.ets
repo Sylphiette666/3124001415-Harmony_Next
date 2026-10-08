@@ -78,6 +78,18 @@ struct Index {
             }.width('100%').padding(20)
           }.id('OpenWeatherButton').width('100%').backgroundColor('#E5EFFA').borderRadius(22)
             .onClick(() => this.openPage('pages/Weather'))
+          Button({ type: ButtonType.Normal }) {
+            Row({ space: 14 }) {
+              Text('言').fontSize(23).fontWeight(FontWeight.Bold).fontColor('#6A5799')
+                .width(46).height(46).textAlign(TextAlign.Center).backgroundColor(Color.White).borderRadius(15)
+              Column({ space: 6 }) {
+                Text('网页留言板').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)
+                Text('记录想法 · 留言保存在本机').fontSize(13).fontColor(MUTED)
+              }.alignItems(HorizontalAlign.Start).layoutWeight(1)
+              Text('›').fontSize(28).fontColor('#6A5799')
+            }.width('100%').padding(20)
+          }.id('OpenMessageBoardButton').width('100%').backgroundColor('#EEEAF7').borderRadius(22)
+            .onClick(() => this.openPage('pages/MessageBoard'))
           Column({ space: 14 }) {
             Row() {
               Text('个人信息').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)

@@ -13,6 +13,7 @@
 - 任务 02：2026 年 9 月 7 日布置的电子名片管理，要求在 2026 年 9 月 11 日前提交到自己的代码仓库。
 - 任务 03：2026 年 9 月 13 日布置的有声计算器，支持标准计算、按键读音和结果播报；说明文档位于根目录 `doc`。
 - 任务 04：2026 年 9 月 18 日布置的天气预报，支持 34 个省级地区、392 个城市及行政区域选择、当前天气与七日预报、加载 / 错误 / 断网提示、重试及明确标记的离线缓存。
+- 任务 05：2026 年 9 月 27 日布置的网页留言板，通过 Web 加载 rawfile 本地 HTML，支持网页与原生双向通信、本机留言持久化、通知推送、标题同步、搜索和删除确认。
 
 首次启动已预填学号。姓名、班级或专业需按实际情况填写，不使用示例人物代替。
 
@@ -36,6 +37,12 @@
 
 使用无需 API Key 的 Open-Meteo HTTPS 接口，当前天气为气象模型估算值。省市目录内置，不申请定位权限。数据、网络、缓存、状态管理与 UI 分层；说明、测试命令、来源及设备截图见 [doc/weather.md](doc/weather.md)。
 
+## 网页留言板
+
+首页点击“网页留言板”或进入任务 05，填写称呼和内容后点击“保存留言”。留言由原生 Preferences 保存在本机，重新打开应用后自动读取；本功能可离线使用。支持搜索、删除确认，最多保存 100 条留言。
+
+网页通过 `javaScriptProxy` 调用保存、删除、历史读取及系统 Toast；原生通过 `runJavaScript` 返回保存结果、历史数据和通知。顶部“通知”可演示原生向网页主动推送，“刷新”会确认后重新加载网页。界面提供加载进度、错误说明与重试。网页结构、样式和交互脚本均位于 rawfile 的 HTML 中，存储与桥接分别封装。操作说明、设计及验证截图见 [doc/message-board.md](doc/message-board.md)。
+
 ## 在 DevEco Studio 中运行
 
 1. 打开本仓库根目录（包含 `build-profile.json5` 的目录）。
@@ -45,6 +52,7 @@
 5. 首页 → 编辑 → 填写个人信息 → 保存；首页 → 打开任务列表 → 查看任务详情；首页 → 电子名片 → 管理联系人。
 6. 首页 → 有声计算器，或任务列表 → 任务 03 → 进入任务应用。语音默认开启，可用顶部按钮关闭或重新开启。
 7. 首页 → 天气预报，选择省份和城市 → 查询天气；向下滚动查看七日预报和刷新按钮。首次联网需保证模拟器或设备能访问 Open-Meteo。
+8. 首页 → 网页留言板，填写称呼和内容 → 保存留言；向下查看历史留言。点击顶部“通知”验证原生推送，关闭后重新打开应用验证历史恢复。
 
 原有包名和签名配置保持不变。当前生成的 HAP 未签名，适用于本次模拟器验证；真机运行需使用自己的开发签名配置。
 
@@ -66,7 +74,7 @@ Windows PowerShell：
 
 ## 设备测试
 
-在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的七套 Hypium 测试。测试前先启动应用、填写并保存完整个人资料，确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将单用例超时设为 180000 毫秒，整轮等待时间设为 600 秒。
+在 DevEco Studio 中选择测试目录 `entry/src/ohosTest/ets/test`，运行 `List.test.ets` 注册的八套 Hypium 测试。测试前先启动应用、填写并保存完整个人资料，确认设备的系统输入法可用。UI 流程涉及多次页面操作，建议将单用例超时设为 180000 毫秒，整轮等待时间设为 600 秒。
 
 | 测试文件 | 检查内容 |
 | --- | --- |
@@ -77,6 +85,7 @@ Windows PowerShell：
 | `CalculatorEngine.test.ets` | 四则、连续等号、百分比、一元运算、输入编辑、数值范围及错误恢复 |
 | `CalculatorFlow.test.ets` | 首页入口、按键计算、错误提示与恢复、语音开关、重播与返回 |
 | `WeatherFlow.test.ets` | 首页入口、真实天气请求、天气字段、七日预报、刷新与返回 |
+| `MessageStore.test.ets` | 独立留言存储的磁盘重读、删除、并发写入、重复提交和输入校验 |
 
 也可在构建两个 HAP 后，从仓库根目录运行以下 PowerShell 命令。`127.0.0.1:5555` 为本次模拟器地址；其他设备请替换为 `hdc list targets` 返回的目标标识。
 
@@ -90,7 +99,7 @@ $taskDevice = '127.0.0.1:5555'
 & $taskHdc -t $taskDevice shell aa test -b cn.gdut.iotsoft.cdz3124001415 -m entry_test -s unittest OpenHarmonyTestRunner -s timeout 180000 -w 600
 ```
 
-构建和设备测试的实际结果见 [原有功能验证记录](docs/verification.md)、[有声计算器验证记录](doc/calculator.md) 和 [天气验证记录](doc/weather.md)。上述表格说明测试覆盖内容，不代表所有环境都已通过验证。
+构建和设备测试的实际结果见 [原有功能验证记录](docs/verification.md)、[有声计算器验证记录](doc/calculator.md)、[天气验证记录](doc/weather.md) 和 [网页留言板验证记录](doc/message-board.md)。上述表格说明测试覆盖内容，不代表所有环境都已通过验证。
 
 计算模型的 26 项测试和语音服务的 8 项异步回调测试可独立运行：
 
@@ -104,6 +113,14 @@ $taskDevice = '127.0.0.1:5555'
 ```powershell
 & 'D:\HUAWEI\DevEco Studio\tools\node\node.exe' scripts/test-weather.cjs --deveco-home 'D:\HUAWEI\DevEco Studio' --live
 ```
+
+留言存储与桥接的 29 项本地测试：
+
+```powershell
+& 'D:\HUAWEI\DevEco Studio\tools\node\node.exe' scripts/test-message-board.cjs --deveco-home 'D:\HUAWEI\DevEco Studio'
+```
+
+网页另有 14 项 Playwright 浏览器测试，设备端有 3 项真实 Preferences 测试；环境要求和运行命令见 [留言板验证记录](doc/message-board.md)。
 
 ## 新增课程任务
 
@@ -131,9 +148,14 @@ $taskDevice = '127.0.0.1:5555'
 | `entry/src/main/ets/model/WeatherCities.ets` | 34 个省级地区、392 个城市及行政区域 |
 | `entry/src/main/ets/model/WeatherStore.ets` | 最近城市和独立天气缓存 |
 | `entry/src/main/ets/services/WeatherHttpClient.ets` | HTTP 请求、断网检测、超时及资源释放 |
-| `entry/src/main/ets/model/CourseData.ets` | 任务 01 / 02 / 03 / 04 说明与功能页入口 |
+| `entry/src/main/ets/pages/MessageBoard.ets` | 原生 Web 容器、标题 / 进度同步、加载与错误提示 |
+| `entry/src/main/resources/rawfile/message-board.html` | 留言网页的结构、样式、表单、搜索与删除交互 |
+| `entry/src/main/ets/model/BoardMessage.ets` | 留言数据模型、长度限制与输入校验 |
+| `entry/src/main/ets/model/MessageStore.ets` | 原生留言持久化、写入排队、失败恢复和重复提交处理 |
+| `entry/src/main/ets/services/MessageBoardBridge.ets` | 独立双向桥接、回调序列与页面生命周期管理 |
+| `entry/src/main/ets/model/CourseData.ets` | 任务 01 / 02 / 03 / 04 / 05 说明与功能页入口 |
 | `entry/src/main/resources/base/profile/main_pages.json` | 页面注册 |
-| `entry/src/ohosTest/ets/test/List.test.ets` | 七套设备测试的统一入口 |
+| `entry/src/ohosTest/ets/test/List.test.ets` | 八套设备测试的统一入口 |
 | `scripts/build.ps1` | 应用及设备测试包构建脚本 |
 
 ## GitHub 与 Gitee
@@ -153,3 +175,5 @@ Gitee 对应仓库：[Sylphiette666/3124001415-Harmony_Next](https://gitee.com/S
 有声计算器的操作说明、设计和本次验证记录见 [doc/calculator.md](doc/calculator.md)。任务 03 要求在 2026 年 9 月 17 日前提交，文档按要求保存在根目录 `doc`。
 
 天气预报的操作、分层设计、数据来源及设备验证记录见 [doc/weather.md](doc/weather.md)。
+
+网页留言板的操作、桥接协议、持久化设计及设备验证记录见 [doc/message-board.md](doc/message-board.md)。任务 05 原要求于 2026 年 10 月 7 日前提交，本次实现与验证日期为 2026 年 10 月 8 日。

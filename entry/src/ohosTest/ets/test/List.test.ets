@@ -5,6 +5,7 @@ import profileFlowTest from './ProfileFlow.test';
 import calculatorEngineTest from './CalculatorEngine.test';
 import calculatorFlowTest from './CalculatorFlow.test';
 import weatherFlowTest from './WeatherFlow.test';
+import messageStoreTest from './MessageStore.test';
 
 export default function testsuite() {
   abilityTest();
@@ -14,4 +15,5 @@ export default function testsuite() {
   calculatorEngineTest();
   calculatorFlowTest();
   weatherFlowTest();
+  messageStoreTest();
 }

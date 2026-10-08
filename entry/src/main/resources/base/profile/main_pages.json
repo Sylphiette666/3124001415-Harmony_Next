@@ -9,6 +9,7 @@
     "pages/CardDetail",
     "pages/CardEditor",
     "pages/Calculator",
-    "pages/Weather"
+    "pages/Weather",
+    "pages/MessageBoard"
   ]
 }
