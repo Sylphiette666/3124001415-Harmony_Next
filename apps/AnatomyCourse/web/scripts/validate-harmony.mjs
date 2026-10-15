@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {searchAtlas,attachBridge} from '../app/harmony-bridge.ts';
+const atlas=JSON.parse(fs.readFileSync(new URL('../public/models/atlas.json',import.meta.url)));
+const events=[];globalThis.window={NativeAtlas:{onEvent:json=>events.push(JSON.parse(json))}};
+let chosen,isolated,reset=false;
+const detach=attachBridge(atlas,c=>chosen=c,v=>isolated=v,()=>reset=true);
+assert.equal(searchAtlas(atlas,'心脏')[0].name.toLowerCase(),'heart');
+assert(searchAtlas(atlas,'股骨').some(c=>c.name.toLowerCase().includes('femur')));
+assert.equal(searchAtlas(atlas,'unmatchedzebranova').length,0);
+assert.equal(searchAtlas(atlas,'').length,0);
+assert.equal(events[0].type,'ready');assert.equal(events[0].count,2234);
+const heart=searchAtlas(atlas,'heart')[0];assert(window.HarmonyAtlas.select(heart.id));assert.equal(chosen.id,heart.id);
+assert(!window.HarmonyAtlas.select('__invalid__'));assert.equal(chosen.id,heart.id);
+window.HarmonyAtlas.isolate(true);assert.equal(isolated,true);window.HarmonyAtlas.reset();assert(reset);
+detach();assert.equal(window.HarmonyAtlas,undefined);
+console.log('PASS: Chinese search, exact concept selection, invalid-id preservation, ready/isolate/reset bridge and teardown.');

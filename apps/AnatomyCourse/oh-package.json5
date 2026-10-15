@@ -1,0 +1,10 @@
+{
+  "modelVersion": "6.1.1",
+  "name": "anatomy-course",
+  "version": "1.0.0",
+  "description": "知体 课程解剖与知识问答",
+  "dependencies": {},
+  "devDependencies": {
+    "@ohos/hypium": "1.0.25"
+  }
+}

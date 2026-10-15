@@ -24,3 +24,11 @@
 # Local verification and generated packages
 *.hap
 *.app
+
+# Local coursework documents
+*.doc
+*.docx
+*实验报告*.pdf
+!.env.example
+# Preserve the verified music build attachments
+!apps/CodexMusic/artifacts/*.hap

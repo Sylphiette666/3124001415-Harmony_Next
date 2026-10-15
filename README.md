@@ -1,3 +1,19 @@
+# Harmony Next 课程项目仓库
+
+本仓库整合两个独立实验 App 和原有课程练习。使用 DevEco Studio 时，请打开对应 App 的目录。
+
+| 工程 | 入口与说明 |
+|---|---|
+| 听见 · 音乐播放 APP | [apps/CodexMusic](apps/CodexMusic/README.md)，原生播放、导入、歌词与歌单 |
+| 知体 · 人体解剖与课程问答 | [apps/AnatomyCourse](apps/AnatomyCourse/README.md)，离线 3D、收藏笔记、12 篇资料与引用问答 |
+| 原有课程练习 | 本仓库根工程，原有内容说明见下文 |
+
+两个 App 使用不同包名，可以同时安装。知体首次运行须先按 README 构建 Web 资源，再在 DevEco 同步和运行。技术文档入口：[doc/实验项目索引.md](doc/实验项目索引.md)。
+
+个人实验报告、封面和模板仅在本地保存，不上传仓库。项目开发由 CODEX 协助完成。
+
+---
+
 # HarmonyOS NEXT 课程学习项目
 
 学号：3124001415。使用 ArkTS、ArkUI 和 Stage 模型开发，可在 DevEco Studio 中打开和运行。
