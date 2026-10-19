@@ -1,7 +1,7 @@
 import { relationalStore } from '@kit.ArkData';
 import { common } from '@kit.AbilityKit';
 import { util } from '@kit.ArkTS';
-import { CourseDocument, Segment, Structure, AppSettings, splitDocument, validateDocument } from './Knowledge';
+import { CourseDocument, Segment, AppSettings, splitDocument, validateDocument } from './Knowledge';
 
 export class CourseStore {
   private db: relationalStore.RdbStore | undefined = undefined;
@@ -14,16 +14,16 @@ export class CourseStore {
   private database(): relationalStore.RdbStore {
     if (!this.db) { throw new Error('资料库尚未就绪，请稍后重试'); } return this.db;
   }
-  async init(context: common.Context, name: string = 'anatomy_course.db'): Promise<void> {
+  async init(context: common.Context, name: string = 'course_knowledge.db'): Promise<void> {
     return this.serial(async () => {
       if (this.db) { return; }
       const db = await relationalStore.getRdbStore(context, { name: name, securityLevel: relationalStore.SecurityLevel.S1 });
       await db.executeSql('CREATE TABLE IF NOT EXISTS documents (id TEXT PRIMARY KEY, title TEXT NOT NULL, source TEXT NOT NULL, body TEXT NOT NULL, revision INTEGER NOT NULL, updated INTEGER NOT NULL)');
       await db.executeSql('CREATE TABLE IF NOT EXISTS segments (id TEXT PRIMARY KEY, document_id TEXT NOT NULL, title TEXT NOT NULL, source TEXT NOT NULL, text TEXT NOT NULL, start INTEGER NOT NULL, end INTEGER NOT NULL, revision INTEGER NOT NULL, vector TEXT NOT NULL, model TEXT NOT NULL)');
       await db.executeSql('CREATE INDEX IF NOT EXISTS segments_doc ON segments(document_id)');
-      await db.executeSql('CREATE TABLE IF NOT EXISTS structures (id TEXT PRIMARY KEY, name TEXT NOT NULL, system TEXT NOT NULL, concept_id TEXT NOT NULL, description TEXT NOT NULL, time INTEGER NOT NULL, note TEXT NOT NULL, favorite INTEGER NOT NULL)');
       await db.executeSql('CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)');
       this.db = db;
+      try {
       const rows = await db.querySql("SELECT value FROM meta WHERE key='seeded'");
       let seeded = false; try { seeded = rows.goToNextRow(); } finally { rows.close(); }
       if (!seeded) {
@@ -37,6 +37,7 @@ export class CourseStore {
         } catch (error) { db.rollBack(); this.db = undefined; throw error as Error; }
       }
       this.version++;
+      } catch (error) { this.db = undefined; throw error as Error; }
     });
   }
   private async writeDocument(doc: CourseDocument): Promise<void> {
@@ -102,26 +103,6 @@ export class CourseStore {
         }
         db.commit();
       } catch (error) { db.rollBack(); throw error as Error; }
-    });
-  }
-  async visit(item: Structure): Promise<void> {
-    return this.serial(async () => {
-      const db = this.database();
-      await db.executeSql('INSERT OR IGNORE INTO structures VALUES (?,?,?,?,?,?,?,?)', [item.id, item.name, item.system, item.conceptId, item.description, Date.now(), '', 0]);
-      await db.executeSql('UPDATE structures SET time=? WHERE id=?', [Date.now(), item.id]);
-    });
-  }
-  async updateStructure(id: string, favorite: boolean, note: string): Promise<void> {
-    if (note.length > 10000) { throw new Error('笔记最多 10000 字'); }
-    return this.serial(async () => { await this.database().executeSql('UPDATE structures SET favorite=?, note=? WHERE id=?', [favorite ? 1 : 0, note, id]); });
-  }
-  async structures(): Promise<Structure[]> {
-    return this.serial(async () => {
-      const rows = await this.database().querySql('SELECT * FROM structures ORDER BY time DESC LIMIT 300');
-      const result: Structure[] = [];
-      try { while (rows.goToNextRow()) { result.push({ id: rows.getString(0), name: rows.getString(1), system: rows.getString(2),
-        conceptId: rows.getString(3), description: rows.getString(4), time: rows.getLong(5), note: rows.getString(6), favorite: rows.getLong(7) === 1 }); } } finally { rows.close(); }
-      return result;
     });
   }
   async settings(): Promise<AppSettings> {

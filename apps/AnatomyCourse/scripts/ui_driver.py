@@ -1,9 +1,9 @@
-import subprocess,json,re,sys,time,pathlib
+import subprocess,json,re,sys,time,pathlib,os
 ROOT=pathlib.Path(__file__).resolve().parent.parent/'.qa'
 ROOT.mkdir(exist_ok=True)
 (ROOT/'screenshots').mkdir(exist_ok=True)
 HDC=r'D:\HUAWEI\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe'
-BASE=[HDC,'-t','127.0.0.1:5555']
+BASE=[HDC,'-t',os.environ.get('HDC_TARGET','127.0.0.1:5555')]
 def run(*args):
  p=subprocess.run(BASE+list(args),capture_output=True,encoding='utf-8',errors='replace',timeout=30)
  if p.returncode or '[Fail]' in p.stdout or 'Not match target' in p.stdout: raise RuntimeError(p.stdout+p.stderr)

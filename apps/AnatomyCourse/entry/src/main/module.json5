@@ -12,14 +12,6 @@
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
-    "requestPermissions": [
-      {
-        "name": "ohos.permission.INTERNET"
-      },
-      {
-        "name": "ohos.permission.GET_NETWORK_INFO"
-      }
-    ],
     "abilities": [
       {
         "name": "EntryAbility",
@@ -37,20 +29,6 @@
             ],
             "actions": [
               "ohos.want.action.home"
-            ]
-          },
-          {
-            "entities": [
-              "entity.system.browsable"
-            ],
-            "actions": [
-              "ohos.want.action.viewData"
-            ],
-            "uris": [
-              {
-                "scheme": "anatomycourse",
-                "host": "ask"
-              }
             ]
           }
         ]

@@ -44,6 +44,18 @@ struct Index {
             .backgroundColor('#183A4B').borderRadius(24)
           Button({ type: ButtonType.Normal }) {
             Row({ space: 14 }) {
+              Text('问').fontSize(23).fontWeight(FontWeight.Bold).fontColor(ACCENT)
+                .width(46).height(46).textAlign(TextAlign.Center).backgroundColor(Color.White).borderRadius(15)
+              Column({ space: 6 }) {
+                Text('课程知识问答').fontSize(20).fontWeight(FontWeight.Bold).fontColor(INK)
+                Text('任务 06 · 内置 12 篇讲义 · 引用可追溯').fontSize(12).fontColor(MUTED)
+              }.alignItems(HorizontalAlign.Start).layoutWeight(1)
+              Text('›').fontSize(28).fontColor(ACCENT)
+            }.width('100%').padding(20)
+          }.id('OpenKnowledgeButton').width('100%').backgroundColor('#DDEEE8').borderRadius(22)
+            .onClick(() => this.openPage('pages/KnowledgeAssistant'))
+          Button({ type: ButtonType.Normal }) {
+            Row({ space: 14 }) {
               Text('名').fontSize(23).fontWeight(FontWeight.Bold).fontColor(ACCENT)
                 .width(46).height(46).textAlign(TextAlign.Center).backgroundColor(Color.White).borderRadius(15)
               Column({ space: 6 }) {

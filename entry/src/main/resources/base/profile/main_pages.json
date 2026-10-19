@@ -10,6 +10,7 @@
     "pages/CardEditor",
     "pages/Calculator",
     "pages/Weather",
-    "pages/MessageBoard"
+    "pages/MessageBoard",
+    "pages/KnowledgeAssistant"
   ]
 }

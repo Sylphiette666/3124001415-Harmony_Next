@@ -6,6 +6,4 @@ Web 基础项目：[ashemag/human-atlas](https://github.com/ashemag/human-atlas)
 
 数据来源：[BodyParts3D](https://lifesciencedb.jp/bp3d/)、[数据许可](https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html)。原始署名文件保留在 `web/public/ATTRIBUTION.md`，随 Web 构建打包。应用“学习 → 关于”和 Web“来源与许可”可查看署名。
 
-内置课程讲义由 CODEX 根据本工程实现、用户作业要求及本机 API 24 SDK 整理，来源字段明确标记为项目课程讲义，不冒充教师原始教材或官方逐字原文。
-
 React、Three.js、Vite 及其他依赖的版本由 `web/package-lock.json` 固定，其许可保留在对应软件包内。不要移除上游代码和模型的许可证、版权或署名信息。

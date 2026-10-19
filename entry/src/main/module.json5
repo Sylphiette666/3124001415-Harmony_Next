@@ -32,6 +32,10 @@
             "actions": [
               "ohos.want.action.home"
             ]
+          },
+          {
+            "actions": ["ohos.want.action.viewData"],
+            "uris": [{ "scheme": "courselearning", "host": "ask" }]
           }
         ]
       }

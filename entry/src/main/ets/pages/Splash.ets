@@ -20,6 +20,7 @@ class SplashFrameCallback extends FrameCallback {
 @Entry
 @Component
 struct Splash {
+  @StorageLink('courseAskIntent') @Watch('consumeKnowledgeIntent') knowledgeIntent: string = '';
   @State navigationError: boolean = false;
   private visible: boolean = false;
   private imageReady: boolean = false;
@@ -29,6 +30,7 @@ struct Splash {
 
   onPageShow(): void {
     this.visible = true;
+    this.consumeKnowledgeIntent();
     this.scheduleAfterFrame();
   }
 
@@ -40,6 +42,12 @@ struct Splash {
   aboutToDisappear(): void {
     this.visible = false;
     this.clearTimer();
+  }
+
+  private consumeKnowledgeIntent(): void {
+    if (this.visible && this.knowledgeIntent && !this.navigating) {
+      this.clearTimer(); this.enterApplication();
+    }
   }
 
   private clearTimer(): void {
@@ -79,7 +87,7 @@ struct Splash {
     this.navigating = true;
     this.navigationError = false;
     hilog.info(0x0000, 'Splash', 'Entering the course application.');
-    this.getUIContext().getRouter().replaceUrl({ url: 'pages/Index' }).catch(() => {
+    this.getUIContext().getRouter().replaceUrl({ url: this.knowledgeIntent ? 'pages/KnowledgeAssistant' : 'pages/Index' }).catch(() => {
       this.navigating = false;
       this.navigationError = true;
     });

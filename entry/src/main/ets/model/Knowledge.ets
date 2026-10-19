@@ -8,7 +8,8 @@ export interface Segment {
 export interface Evidence { segment: Segment; score: number; }
 @Observed
 export class ChatMessage {
-  id: string = `${Date.now()}`;
+  private static sequence: number = 0;
+  id: string = `${Date.now()}-${++ChatMessage.sequence}`;
   question: string = '';
   answer: string = '';
   evidence: Evidence[] = [];
@@ -20,10 +21,6 @@ export class ChatMessage {
     this.question = question; this.revision = revision;
     this.mode = cloud ? '云端生成 · 混合检索' : '本地资料摘录 · 离线可用';
   }
-}
-export interface Structure {
-  id: string; name: string; system: string; conceptId: string;
-  description: string; time: number; note: string; favorite: boolean;
 }
 export interface AppSettings { endpoint: string; cloud: boolean; }
 
@@ -143,7 +140,7 @@ export function nextCodePoint(text: string, offset: number): number {
 
 export function extractQuestion(uri: string, parameter: string = ''): string {
   if (parameter.trim()) { return parameter.trim().slice(0, 600); }
-  if (!/^anatomycourse:\/\/ask(?:[?]|$)/.test(uri)) { return ''; }
+  if (!/^courselearning:\/\/ask(?:[?]|$)/.test(uri)) { return ''; }
   const match = /[?&]question=([^&]*)/.exec(uri);
   if (!match) { return ''; }
   try { return decodeURIComponent(match[1].replace(/\+/g, ' ')).trim().slice(0, 600); } catch { return ''; }

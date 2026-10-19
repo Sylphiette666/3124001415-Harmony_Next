@@ -50,7 +50,15 @@ export const COURSE_TASKS: CourseTask[] = [
       '双向通信：javaScriptProxy 注入提交、读取和 Toast 能力；原生主动调用网页函数渲染历史留言和通知。',
       '本机保存：原生持久化存储留言，支持搜索、确认删除和重启后读取。',
       '友好交互：加载进度、失败重试、网页标题同步及刷新。',
-      '工程实践：桥接与存储独立封装，文档放在根目录 doc。'], 'pages/MessageBoard')
+      '工程实践：桥接与存储独立封装，文档放在根目录 doc。'], 'pages/MessageBoard'),
+  new CourseTask('06', '课程知识问答助手', '2026.10.14',
+    '对话式查询本地课程资料，逐字展示带来源的回答，支持资料管理和 ArkAF 意图唤起。',
+    ['对话问答：自然语言提问，基于本地课程知识库回答，支持流式逐字输出。',
+      '可追溯引用：展示引用资料名称与片段，点击可查看原文上下文。',
+      '资料管理：内置 12 篇课程资料，可新增、修改、删除，检索内容同步更新。',
+      '意图入口：ArkAF AskCourse 携带 question 参数直接打开问答并自动提问。',
+      '友好状态：资料处理、加载、无网络、无结果和失败均有提示与重试。',
+      '提交时间：2026 年 10 月 22 日（周四）前提交课程代码库，文档放在 doc 子目录。'], 'pages/KnowledgeAssistant')
 ];
 export interface TaskRouteParams { taskId: string; }
 export const INK: string = '#182D3B';

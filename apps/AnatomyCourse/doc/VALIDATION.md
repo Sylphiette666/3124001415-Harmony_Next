@@ -1,37 +1,34 @@
-# 运行验证记录
+# 实验二运行验证记录
 
-验证日期：2026-10-15。环境：Windows、DevEco Studio 的 HarmonyOS 6.1.1 / API 24 SDK、Pura 90 手机模拟器；Web 与协议测试使用 Node.js 24.19。
+验证日期：2026-10-19。环境：Windows、DevEco Studio 的 HarmonyOS 6.1.1 / API 24 SDK、Pura 90 手机模拟器；脚本使用 Node.js 24.19。
 
-## 已完成的检查
+## 检查结果
 
 | 范围 | 检查与结果 |
 |---|---|
-| Web 数据完整性 | 2,234 个网格、3,432 个概念、2,288,268 个三角面及全部二进制缓冲校验通过 |
+| 实验范围 | 仅保留浏览/学习两页；默认打开人体模型，无课程问答、资料管理或云端设置入口 |
+| Web 数据 | 2,234 个网格、3,432 个概念、2,288,268 个三角面及全部二进制缓冲校验通过 |
 | Web 交互 | 桌面/移动布局、点击、拖动、多点触控、取消、空视图检查通过 |
-| 新增桥接 | 中文搜索、精确 ID、无效 ID 不覆盖选中项、ready/isolate/reset、注销检查通过 |
-| 类型及打包 | TypeScript 检查与 Vite 构建通过；DevEco Hvigor assembleHap 通过 |
-| 知识库 | 12 篇种子、Unicode 切分与偏移、关键词/RRF、Want 参数解析通过 |
-| 数据事务 | 实际 SQLite 上验证 CRUD、回滚、过期向量拒绝、并发串行化、收藏与笔记通过 |
-| 原生网络适配 | 分字节 UTF-8、CRLF SSE、流截断、错误/状态码、HTTPS、资源释放通过 |
-| 云代理 | 6 项本地模拟模型服务测试全部通过，包含非法引用和缺失配置 |
-| 模拟器资料 CRUD | 新增 Zebranova/AzureMark 可检索；修改为 GoldMark 后旧值消失；删除后无匹配，资料恢复为 12 篇 |
-| 模拟器知识问答 | 逐字输出、停止/重试入口、引用及高亮原文可用；冷/热启动 Want 自动提问通过 |
-| 模拟器解剖浏览 | 离线资源加载并显示人体；心脏搜索与结构选择可用；收藏、笔记在强制停止再启动后保留 |
-| ArkAF | @InsightIntentLink 已生成 insight_intent.json；验证方式为 Want / 应用内调试入口 |
+| Web 桥接 | 中文搜索、精确 ID、无效 ID 不覆盖选中项、ready/isolate/reset、注销检查通过 |
+| 原生桥接 | 双层 JSON 字符串兼容、rawfile MIME、拒绝外站和目录穿越、异常消息保护通过 |
+| 数据与升级 | 实际 SQLite 验证新安装只建 structures；旧表和既有收藏笔记不被覆盖；串行写入与笔记长度校验通过 |
+| 历史与收藏 | 最近 300 条历史之外的旧收藏仍可读取，取消收藏后遵循历史范围 |
+| 编译 | Web TypeScript 检查通过；DevEco Hvigor 干净构建 assembleHap 通过 |
+| 最终安装包 | 解包确认无 AskCourse / insight_intent 文件、无课程讲义种子、无网络权限，ability 只保留 home skill |
+| 模拟器升级 | 使用 install -r 更新安装，未卸载或清除数据；原先 heart 收藏与笔记保留 |
+| 模拟器运行 | 本地人体模型显示，搜索与结构定位可用；强制停止再启动后收藏与笔记保留 |
 
-测试命令见根 README。模拟器安装并运行的是本工程构建的未签名调试 HAP。编译仍有 SDK 异常声明、弃用 API 和资源同名警告，不影响本次编译；Vite 有单个 JS 包大于 500 kB 的提示。
+测试命令见本工程 README。模拟器使用本工程生成的未签名调试 HAP。编译仍有 SDK 异常声明和资源同名警告，不影响本次编译。
 
-## 实际运行截图
+## 当前两页签截图
 
-- [3D 浏览](screenshots/atlas-final.jpeg)
-- [课程问答](screenshots/qa-final.jpeg)
-- [引用原文](screenshots/source-final.jpeg)
+- [默认 3D 浏览](screenshots/atlas-final.jpeg)
 - [重启后的收藏与笔记](screenshots/favorites-final.jpeg)
-- [修改资料后的回答](screenshots/qa-crud-updated.jpeg)
-- [删除资料后的无匹配提示](screenshots/qa-crud-deleted.jpeg)
 
-## 边界与后续验证
+## 运行边界
 
-默认模式检索本地资料后逐字展示摘录，不是本地大模型。云端 embedding 与生成代理代码可部署，但尚未配置真实公共 HTTPS 模型服务，未宣称完成真实云模型端到端验收。无网络分支已实现，未通过切断模拟器网络进行实测；请求截断和服务失败由协议测试验证。
+首次克隆需先构建 Web，再在 DevEco 同步 OHPM 依赖。模型全部随包提供，不依赖云服务。模拟器初次打开 ArkWeb 与模型可能需数十秒，界面显示加载状态；超过 60 秒未完成会显示可重试提示。该时间不代表性能保证。正式真机安装需要配置自己的开发签名，尚未做真机性能验证。
 
-未验证真机系统意图分发、Data Augmentation Kit、IPC 服务化、语音播报；这些不属于本次必选交付。ArkAF 装饰器和模拟器 Want 链路已验证。首次克隆需先构建 Web，再由 DevEco 同步 OHPM 依赖。模型数据用于教学浏览。
+从早期混合版本更新源码时，请在 DevEco 执行 Clean Project 后重新构建，避免 Hvigor 缓存旧的 intent profile。安装采用覆盖升级即可，勿卸载或清除数据库。
+
+课程知识问答与 ArkAF 问答链路的实现和验证属于仓库根目录课程项目，不计入实验二。
