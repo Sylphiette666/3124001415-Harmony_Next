@@ -1,0 +1,8 @@
+{
+  "modelVersion": "6.1.1",
+  "name": "smart-object-assistant",
+  "version": "1.0.0",
+  "description": "识物 智能物品识别助手",
+  "dependencies": {},
+  "devDependencies": {}
+}

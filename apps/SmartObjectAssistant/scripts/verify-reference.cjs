@@ -1,0 +1,25 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
+const { findTypeScript, readOptions } = require('./test-support.cjs');
+const index = process.argv.indexOf('--reference-dir');
+if (index < 0 || !process.argv[index + 1]) throw new Error('Pass --reference-dir from models/export_model.py output.');
+const reference = path.resolve(process.argv[index + 1]); process.argv.splice(index, 2);
+const ts = findTypeScript(readOptions());
+const file = path.resolve(__dirname, '../entry/src/main/ets/model/DetectionMath.ets');
+const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+const exportsMath = {}; vm.runInThisContext(`(function(require,exports){${code}\n})`, { filename: file })(() => ({}), exportsMath);
+const info = JSON.parse(fs.readFileSync(path.join(reference, 'reference.json'), 'utf8'));
+const rgba = new Uint8Array(fs.readFileSync(path.join(reference, 'sample.rgba')));
+function floats(name) { const bytes = fs.readFileSync(path.join(reference, name)); return new Float32Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)); }
+const geometry = exportsMath.letterboxGeometry(info.width, info.height);
+const input = exportsMath.preprocess(rgba, geometry), baseline = floats('input.f32');
+assert.equal(input.length, baseline.length);
+let maxDifference = 0; for (let i = 0; i < input.length; i++) maxDifference = Math.max(maxDifference, Math.abs(input[i] - baseline[i]));
+assert.ok(maxDifference < 1e-6, `preprocess difference ${maxDifference}`);
+const detections = exportsMath.postprocess(floats('output.f32'), info.outputShape, geometry, .35);
+assert.ok(detections.some(d => d.classId === 5), 'real exported model should detect the sample bus');
+assert.ok(detections.some(d => d.classId === 0), 'real exported model should detect people in the sample');
+for (const box of detections) assert.ok(box.x1 >= 0 && box.x2 <= info.width && box.y1 >= 0 && box.y2 <= info.height);
+const result = { modelSha256: info.modelSha256, maxPreprocessDifference: maxDifference, summary: exportsMath.summarize(detections), detections };
+fs.writeFileSync(path.join(reference, 'math-result.json'), JSON.stringify(result, null, 2));
+console.log('PASS actual ETS preprocessing vs independent NumPy reference; real ONNX output NMS:', JSON.stringify(result.summary));

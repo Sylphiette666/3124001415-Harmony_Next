@@ -1,0 +1,1 @@
+"""Smart Objects lab backend."""
