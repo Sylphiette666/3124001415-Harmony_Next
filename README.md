@@ -1,15 +1,16 @@
 # Harmony Next 课程项目仓库
 
-本仓库整合三个独立实验 App 和原有课程练习。使用 DevEco Studio 时，请打开对应 App 的目录。
+本仓库整合四个独立实验 App 和原有课程练习。使用 DevEco Studio 时，请打开对应 App 的目录。
 
 | 工程 | 入口与说明 |
 |---|---|
 | 听见 · 音乐播放 APP | [apps/CodexMusic](apps/CodexMusic/README.md)，原生播放、导入、歌词与歌单 |
 | 知体 · 人体解剖浏览器（实验二） | [apps/AnatomyCourse](apps/AnatomyCourse/README.md)，离线 3D、搜索、收藏、历史与笔记 |
 | 识物 · 智能物品识别助手（实验三） | [apps/SmartObjectAssistant](apps/SmartObjectAssistant/README.md)，YOLOv13n端侧检测、相机相册、清单、JWT同步与模型更新 |
+| 归物 · 鸿蒙综合应用开发（实验四） | [apps/CampusReturn](apps/CampusReturn/README.md)，校园失物招领、AI辅助发布、竞领核验、申诉、信用与管理员 |
 | 课程学习项目（校徽图标） | 本仓库根工程，任务 01—06；[课程知识问答助手](doc/knowledge-assistant.md)属于本应用 |
 
-课程学习项目与三款实验 App 使用不同包名，可以同时安装。2026-10-14 布置的课程知识问答是课程任务 06，与实验二分开。知体首次运行须先按 README 构建 Web 资源，再在 DevEco 同步和运行。技术文档入口：[doc/实验项目索引.md](doc/实验项目索引.md)。
+课程学习项目与四款实验 App 使用不同包名，可以同时安装。2026-10-14 布置的课程知识问答是课程任务 06，与实验二分开。知体首次运行须先按 README 构建 Web 资源，再在 DevEco 同步和运行。技术文档入口：[doc/实验项目索引.md](doc/实验项目索引.md)。
 
 个人实验报告、封面和模板仅在本地保存，不上传仓库。项目开发由 CODEX 协助完成。
 

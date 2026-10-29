@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "校园失物招领"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "归物"
+    },
+    {
+      "name": "camera_reason",
+      "value": "拍摄物品照片用于失物与招领发布"
+    },
+    {
+      "name": "microphone_reason",
+      "value": "口述物品描述并转为发布文字"
+    }
+  ]
+}

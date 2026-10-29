@@ -1,0 +1,8 @@
+{
+  "modelVersion": "6.1.1",
+  "name": "campus-return",
+  "version": "1.0.0",
+  "description": "归物 校园智能失物招领",
+  "dependencies": {},
+  "devDependencies": {}
+}

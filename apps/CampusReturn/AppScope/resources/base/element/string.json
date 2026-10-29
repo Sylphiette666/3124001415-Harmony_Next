@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "归物"
+    },
+    {
+      "name": "microphone_reason",
+      "value": "口述物品描述并转为发布文字"
+    }
+  ]
+}
